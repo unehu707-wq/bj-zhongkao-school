@@ -76,49 +76,27 @@ function nextWeekdayMorning() {
 
 export function calcRoute(mode, origin, destination) {
   ensureServices();
-  if (mode === TRAVEL_MODES.DRIVING) return calcDriving(origin, destination);
-  if (mode === TRAVEL_MODES.TRANSIT) return calcTransit(origin, destination);
-  if (mode === TRAVEL_MODES.RIDING) return calcRiding(origin, destination);
+  if (mode === TRAVEL_MODES.DRIVING) {
+    return search(driving, origin, destination, '驾车', r => r.routes && r.routes[0]);
+  }
+  if (mode === TRAVEL_MODES.TRANSIT) {
+    const { date, time } = nextWeekdayMorning();
+    transfer.leaveAt(time, date);
+    return search(transfer, origin, destination, '公交', r => r.plans && r.plans[0]);
+  }
+  if (mode === TRAVEL_MODES.RIDING) {
+    return search(riding, origin, destination, '骑行', r => r.routes && r.routes[0]);
+  }
   return Promise.reject(new Error('未知通勤方式：' + mode));
 }
 
-function calcDriving(origin, destination) {
+// 把 AMap 的 search 回调包成 Promise；pickRoute 从 result 里取出"第一条路线"对象（含 distance、time）
+function search(service, origin, destination, label, pickRoute) {
   return new Promise((resolve, reject) => {
-    driving.search(origin, destination, (status, result) => {
-      if (status === 'complete' && result.routes && result.routes.length) {
-        const r = result.routes[0];
-        resolve({ distance: r.distance, duration: r.time });
-      } else {
-        reject(new Error('驾车路径规划失败'));
-      }
-    });
-  });
-}
-
-function calcTransit(origin, destination) {
-  const { date, time } = nextWeekdayMorning();
-  transfer.leaveAt(time, date);
-  return new Promise((resolve, reject) => {
-    transfer.search(origin, destination, (status, result) => {
-      if (status === 'complete' && result.plans && result.plans.length) {
-        const p = result.plans[0];
-        resolve({ distance: p.distance, duration: p.time });
-      } else {
-        reject(new Error('公交路径规划失败'));
-      }
-    });
-  });
-}
-
-function calcRiding(origin, destination) {
-  return new Promise((resolve, reject) => {
-    riding.search(origin, destination, (status, result) => {
-      if (status === 'complete' && result.routes && result.routes.length) {
-        const r = result.routes[0];
-        resolve({ distance: r.distance, duration: r.time });
-      } else {
-        reject(new Error('骑行路径规划失败'));
-      }
+    service.search(origin, destination, (status, result) => {
+      const route = status === 'complete' && pickRoute(result);
+      if (route) resolve({ distance: route.distance, duration: route.time });
+      else reject(new Error(`${label}路径规划失败`));
     });
   });
 }

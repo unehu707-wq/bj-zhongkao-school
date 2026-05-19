@@ -12,7 +12,7 @@ const SCOPE_LABEL = {
   'citywide': '全市统招',
 };
 
-const MODE_LABEL = {
+export const MODE_LABEL = {
   [TRAVEL_MODES.TRANSIT]: '公共交通',
   [TRAVEL_MODES.DRIVING]: '驾车',
   [TRAVEL_MODES.RIDING]: '骑行',
@@ -56,6 +56,24 @@ export function renderSchoolList(schools, container) {
   return cards;
 }
 
+export function renderPinnedSchool(school, container) {
+  container.innerHTML = '';
+  container.hidden = false;
+  const label = document.createElement('div');
+  label.className = 'section-label';
+  label.textContent = '★ 我特别关注的学校';
+  container.appendChild(label);
+  const card = createCard(school);
+  card.classList.add('pinned-card');
+  container.appendChild(card);
+  return card;
+}
+
+export function clearPinnedSchoolUI(container) {
+  container.innerHTML = '';
+  container.hidden = true;
+}
+
 function createCard(school) {
   const card = document.createElement('div');
   card.className = 'school-card';
@@ -94,8 +112,6 @@ function feedbackMailto(school) {
   );
   return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
 }
-
-export { MODE_LABEL };
 
 // state: 'pending' | 'error' | { duration }
 export function setCardCommute(card, state) {

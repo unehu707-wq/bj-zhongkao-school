@@ -61,6 +61,121 @@ body {
   margin-top: var(--space-xs);
 }
 
+.school-search {
+  position: relative;
+  margin-top: var(--space-sm);
+}
+.school-search input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--color-text);
+  -webkit-text-fill-color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.school-search input::placeholder {
+  color: var(--color-text-muted);
+  -webkit-text-fill-color: var(--color-text-muted);
+}
+.school-search input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: #fff;
+}
+.search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 200;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.search-results .result-item {
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+}
+.search-results .result-item:last-child {
+  border-bottom: none;
+}
+.search-results .result-item:hover,
+.search-results .result-item:active {
+  background: #f0f6ff;
+}
+.search-results .result-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.search-results .result-meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+.search-results .empty {
+  padding: var(--space-md);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--space-sm);
+  padding: 4px 8px 4px 10px;
+  background: #fff4e5;
+  border: 1px solid #ffd591;
+  border-radius: 16px;
+  font-size: 13px;
+}
+.chip-label {
+  color: #d97706;
+  font-weight: 500;
+}
+.chip-text {
+  color: var(--color-text);
+  font-weight: 500;
+}
+.chip-remove {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.chip-remove:hover {
+  color: var(--color-error);
+}
+
+.pinned-list {
+  margin-bottom: var(--space-md);
+}
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d97706;
+  margin-bottom: var(--space-sm);
+  padding-left: 4px;
+}
+.school-card.pinned-card {
+  border-left: 4px solid #d97706;
+  background: #fffbf3;
+}
+
 main {
   flex: 1;
   padding: var(--space-md);

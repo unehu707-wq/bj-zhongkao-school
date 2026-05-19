@@ -17,7 +17,6 @@ export async function getSchoolsByDistrict(districtId) {
   return all.filter(s => s.district === districtId);
 }
 
-export async function getSchoolById(id) {
-  const all = await loadAllSchools();
-  return all.find(s => s.id === id) || null;
+export async function getAllSchools() {
+  return loadAllSchools();
 }

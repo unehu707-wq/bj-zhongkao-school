@@ -10,7 +10,16 @@
   <div id="app">
     <header class="app-header">
       <h1>哪个学校离我近</h1>
-      <p class="tagline">北京中考通勤参考 · M1</p>
+      <p class="tagline">北京中考通勤参考</p>
+      <div class="school-search">
+        <input id="school-search-input" type="text" placeholder="按学校名挑一所特别关注的（如四中、十一、人大附）" autocomplete="off">
+        <div id="school-search-results" class="search-results" hidden></div>
+      </div>
+      <div id="selected-school-chip" class="chip" hidden>
+        <span class="chip-label">★ 我选的：</span>
+        <span class="chip-text"></span>
+        <button type="button" class="chip-remove" aria-label="移除">×</button>
+      </div>
     </header>
 
     <main>
@@ -38,6 +47,7 @@
       </form>
 
       <div id="mode-tabs" class="mode-tabs" hidden></div>
+      <div id="pinned-list" class="pinned-list" hidden></div>
       <div id="school-list" class="school-list"></div>
 
       <div id="map" class="map-container"></div>
