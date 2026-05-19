@@ -1,5 +1,5 @@
 import { formatDistance } from './geo.js';
-import { TRAVEL_MODES } from './config.js';
+import { TRAVEL_MODES, FEEDBACK_EMAIL } from './config.js';
 
 const TYPE_LABEL = {
   'public': '公办',
@@ -80,10 +80,19 @@ function createCard(school) {
     </div>
     <div class="school-address">${escapeHtml(school.address)}</div>
     <div class="school-actions">
+      <a class="btn-link feedback-link" href="${feedbackMailto(school)}">数据有误</a>
       <button type="button" class="btn-link view-route-btn">看路线 →</button>
     </div>
   `;
   return card;
+}
+
+function feedbackMailto(school) {
+  const subject = encodeURIComponent(`学校数据反馈：${school.name}`);
+  const body = encodeURIComponent(
+    `学校：${school.name}\n地址：${school.address}\n\n问题描述（请简述）：\n`
+  );
+  return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 export { MODE_LABEL };

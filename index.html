@@ -32,6 +32,9 @@
         </div>
 
         <button type="submit" id="search-btn" disabled>查询</button>
+        <div class="form-footer" hidden id="form-footer">
+          <button type="button" id="clear-storage-btn" class="btn-text">清除记忆的地址</button>
+        </div>
       </form>
 
       <div id="mode-tabs" class="mode-tabs" hidden></div>
@@ -41,7 +44,11 @@
     </main>
 
     <footer class="app-footer">
-      <small>数据由 AI 辅助整理，请以学校官方公告为准</small>
+      <small>
+        <a id="footer-feedback-link" class="link" href="#">数据有误？反馈一下</a>
+        <br>
+        数据由 AI 辅助整理，请以学校官方公告为准
+      </small>
     </footer>
   </div>
 

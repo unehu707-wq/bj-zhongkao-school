@@ -5,6 +5,8 @@ import { getSchoolsByDistrict } from './data.js';
 import { renderSchoolList, renderModeTabs, setCardCommute, MODE_LABEL } from './ui.js';
 import { calcRoute, drawRouteOnMap, clearRoutes } from './routing.js';
 import { createIntersectObserver } from './observer.js';
+import * as storage from './storage.js';
+import { FEEDBACK_EMAIL } from './config.js';
 
 let map;
 let geocoder;
@@ -22,6 +24,8 @@ let cardObserver = null;
 async function init() {
   populateDistricts();
   bindFormEvents();
+  restoreFromStorage();
+  setupFeedbackLink();
 
   try {
     const AMap = await loadAMap();
@@ -91,6 +95,56 @@ function bindFormEvents() {
   });
 
   document.getElementById('route-back-btn').addEventListener('click', closeRouteView);
+
+  document.getElementById('clear-storage-btn').addEventListener('click', onClearStorage);
+}
+
+function restoreFromStorage() {
+  const saved = storage.load();
+  if (!saved) return;
+  if (saved.address) {
+    document.getElementById('address-input').value = saved.address.name || '';
+    selectedAddress = saved.address;
+  }
+  if (saved.district) {
+    document.getElementById('district-select').value = saved.district;
+  }
+  if (saved.mode) {
+    currentMode = saved.mode;
+  }
+  // 启用查询按钮
+  const input = document.getElementById('address-input');
+  const select = document.getElementById('district-select');
+  document.getElementById('search-btn').disabled = !(input.value.trim() && select.value);
+  // 显示"清除记忆"按钮
+  document.getElementById('form-footer').hidden = false;
+}
+
+function persistToStorage() {
+  if (!selectedAddress || !document.getElementById('district-select').value) return;
+  storage.save({
+    address: selectedAddress,
+    district: document.getElementById('district-select').value,
+    mode: currentMode,
+  });
+  document.getElementById('form-footer').hidden = false;
+}
+
+function onClearStorage() {
+  storage.clear();
+  selectedAddress = null;
+  document.getElementById('address-input').value = '';
+  document.getElementById('district-select').value = '';
+  document.getElementById('search-btn').disabled = true;
+  document.getElementById('form-footer').hidden = true;
+  showToast('已清除记忆');
+}
+
+function setupFeedbackLink() {
+  const link = document.getElementById('footer-feedback-link');
+  const subject = encodeURIComponent('整体数据反馈');
+  const body = encodeURIComponent('问题描述：\n');
+  link.href = `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 function openRouteView(school) {
@@ -157,10 +211,12 @@ async function onSubmit(e) {
   }
 
   home = { lng: location.lng, lat: location.lat };
+  selectedAddress = location;  // 保证 storage 拿到最新（含 adcode 等）
   placeHomeMarker(location);
   showToast(`✓ 已识别：${location.name}（${districtName(district)}）`);
   await loadAndRenderSchools(district);
   setupModeTabsAndObserver();
+  persistToStorage();
 }
 
 async function loadAndRenderSchools(districtId) {
@@ -191,12 +247,12 @@ function setupModeTabsAndObserver() {
 function onModeChange(mode) {
   currentMode = mode;
   requestVersion++;
-  // 重置所有卡片为 pending，并重新触发可见性检测
   cardsById.forEach(card => {
     setCardCommute(card, 'pending');
     cardObserver.unobserve(card);
     cardObserver.observe(card);
   });
+  persistToStorage();
 }
 
 function onCardEnter(card) {

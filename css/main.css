@@ -305,7 +305,8 @@ main {
 
 .school-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: var(--space-sm);
 }
 .btn-link {
@@ -316,9 +317,40 @@ main {
   font-weight: 500;
   padding: var(--space-xs) var(--space-sm);
   cursor: pointer;
+  text-decoration: none;
 }
 .btn-link:active {
   opacity: 0.5;
+}
+.feedback-link {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.form-footer {
+  margin-top: var(--space-sm);
+  text-align: center;
+}
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: var(--space-xs);
+}
+.btn-text:active {
+  opacity: 0.5;
+}
+
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.app-footer .link {
+  color: var(--color-text-muted);
+  text-decoration: underline;
 }
 
 /* 全屏看路线模式 */

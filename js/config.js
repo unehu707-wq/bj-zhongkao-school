@@ -41,3 +41,6 @@ export const AMAP_PLUGINS = [
 
 // 北京 adcode 前缀（用于 F-09 非北京地址拦截）
 export const BEIJING_ADCODE_PREFIX = '11';
+
+// 反馈邮箱（F-11）。部署前替换为真实接收邮箱
+export const FEEDBACK_EMAIL = 'feedback@example.com';
