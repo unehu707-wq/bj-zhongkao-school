@@ -170,10 +170,11 @@ function setupSchoolSearch() {
   const input = document.getElementById('school-search-input');
   const results = document.getElementById('school-search-results');
 
-  let allSchools = null;
-  const ensureSchools = async () => {
-    if (!allSchools) allSchools = await getAllSchools();
-    return allSchools;
+  // 用 promise 单例：连续敲键时，重复调用复用同一个 in-flight Promise
+  let allSchoolsPromise = null;
+  const ensureSchools = () => {
+    if (!allSchoolsPromise) allSchoolsPromise = getAllSchools();
+    return allSchoolsPromise;
   };
 
   let debounceTimer = null;
@@ -185,9 +186,15 @@ function setupSchoolSearch() {
         results.hidden = true;
         return;
       }
-      const schools = await ensureSchools();
-      const matches = searchSchools(q, schools);
-      renderSearchResults(matches);
+      try {
+        const schools = await ensureSchools();
+        const matches = searchSchools(q, schools);
+        renderSearchResults(matches);
+      } catch (err) {
+        console.error('[search] 学校数据加载失败：', err);
+        results.innerHTML = '<div class="empty">学校数据加载失败，请稍后重试</div>';
+        results.hidden = false;
+      }
     }, 150);
   });
 

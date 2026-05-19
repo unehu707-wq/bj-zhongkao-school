@@ -1,0 +1,90 @@
+{
+  "中国人民大学附属中学": {
+    "shortName": "人大附中",
+    "aliases": ["人大附", "RDFZ", "人大附中本部"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true
+  },
+  "北京市第四中学": {
+    "shortName": "北京四中",
+    "aliases": ["四中"],
+    "admissionScope": "citywide"
+  },
+  "北京师范大学附属实验中学": {
+    "shortName": "师大实验",
+    "aliases": ["实验中学", "师大实验中学"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true
+  },
+  "北京十一学校": {
+    "shortName": "十一学校",
+    "aliases": ["十一", "十一中"],
+    "admissionScope": "citywide"
+  },
+  "首都师范大学附属中学": {
+    "shortName": "首师大附",
+    "aliases": ["首师大附", "首师附"],
+    "admissionScope": "district",
+    "hasInternationalDept": true
+  },
+  "北京市第八中学": {
+    "shortName": "北京八中",
+    "aliases": ["八中"],
+    "admissionScope": "citywide"
+  },
+  "北京市第八十中学": {
+    "shortName": "北京八十中",
+    "aliases": ["八十中", "80中"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true
+  },
+  "北京市第二中学": {
+    "shortName": "北京二中",
+    "aliases": ["二中"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true
+  },
+  "北京市第五中学": {
+    "shortName": "北京五中",
+    "aliases": ["五中"],
+    "admissionScope": "district"
+  },
+  "北京市第一七一中学": {
+    "shortName": "北京一七一中",
+    "aliases": ["171中"],
+    "admissionScope": "district"
+  },
+  "北京汇文中学": {
+    "shortName": "汇文中学",
+    "aliases": ["汇文"],
+    "admissionScope": "district"
+  },
+  "中国人民大学附属中学朝阳学校": {
+    "shortName": "人大附朝阳",
+    "aliases": ["人大附朝阳"],
+    "isBranch": true,
+    "parentSchool": "中国人民大学附属中学",
+    "admissionScope": "district"
+  },
+  "清华大学附属中学": {
+    "shortName": "清华附中",
+    "aliases": ["清华附"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true
+  },
+  "北京大学附属中学": {
+    "shortName": "北大附中",
+    "aliases": ["北大附"],
+    "admissionScope": "citywide"
+  },
+  "北京市第一零一中学": {
+    "shortName": "101中学",
+    "aliases": ["101", "一零一"],
+    "admissionScope": "citywide"
+  },
+  "北京市八一学校": {
+    "shortName": "八一学校",
+    "aliases": ["八一"],
+    "admissionScope": "citywide"
+  }
+}
