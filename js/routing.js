@@ -91,14 +91,29 @@ export function calcRoute(mode, origin, destination) {
 }
 
 // 把 AMap 的 search 回调包成 Promise；pickRoute 从 result 里取出"第一条路线"对象（含 distance、time）
+// 失败时如果识别出是配额相关错误，会在 err 上挂 code = 'QUOTA'
 function search(service, origin, destination, label, pickRoute) {
   return new Promise((resolve, reject) => {
     service.search(origin, destination, (status, result) => {
       const route = status === 'complete' && pickRoute(result);
-      if (route) resolve({ distance: route.distance, duration: route.time });
-      else reject(new Error(`${label}路径规划失败`));
+      if (route) {
+        resolve({ distance: route.distance, duration: route.time });
+        return;
+      }
+      const err = new Error(`${label}路径规划失败`);
+      if (isQuotaError(result)) err.code = 'QUOTA';
+      reject(err);
     });
   });
+}
+
+// 高德返回的限额相关错误信息识别
+// JS API 失败时 result 通常是错误描述字符串，含 OVER_LIMIT / CUQPS_HAS_EXCEEDED 等
+function isQuotaError(result) {
+  const text = typeof result === 'string'
+    ? result
+    : (result && (result.info || JSON.stringify(result))) || '';
+  return /OVER_LIMIT|CUQPS|QUOTA|超限|上限|已达/i.test(text);
 }
 
 // 在指定 map 上绘制路径（会先清掉之前所有模式的路径）

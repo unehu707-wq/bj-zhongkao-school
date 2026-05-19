@@ -35,6 +35,7 @@ async function init() {
   restoreFromStorage();
   setupFeedbackLink();
   setupSchoolSearch();
+  setupNetworkMonitor();
 
   try {
     const AMap = await loadAMap();
@@ -405,9 +406,25 @@ function onCardEnter(card) {
     })
     .catch(err => {
       if (myVersion !== requestVersion) return;
-      console.warn(`[M3] ${school.shortName} ${currentMode} 失败：`, err.message);
+      if (err.code === 'QUOTA') showQuotaBanner();
+      console.warn(`[route] ${school.shortName} ${currentMode} 失败：`, err.message);
       setCardCommute(card, 'error');
     });
+}
+
+// F-10：限额降级 banner（一旦显示就不再隐藏，直到刷新页面）
+let quotaBannerShown = false;
+function showQuotaBanner() {
+  if (quotaBannerShown) return;
+  quotaBannerShown = true;
+  const banner = document.getElementById('api-banner');
+  banner.textContent = '今日访问量已达上限，明日 0 点后恢复。列表仍按直线距离排序';
+  banner.hidden = false;
+}
+
+// 网络断开 toast；恢复时静默（避免吵闹）
+function setupNetworkMonitor() {
+  window.addEventListener('offline', () => showToast('网络异常，请检查网络后重试'));
 }
 
 function onPickOnMap() {

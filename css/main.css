@@ -284,6 +284,16 @@ main {
   background: #f0f6ff;
 }
 
+.banner {
+  padding: var(--space-sm) var(--space-md);
+  background: #fff4e5;
+  border-bottom: 1px solid #ffd591;
+  color: #d97706;
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.5;
+}
+
 .toast {
   position: fixed;
   bottom: 20%;
