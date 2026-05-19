@@ -1,6 +1,8 @@
 import { loadAMap } from './amap-loader.js';
 import { DEFAULT_CENTER, DEFAULT_ZOOM, DISTRICTS } from './config.js';
-import { isBeijingAdcode } from './geo.js';
+import { isBeijingAdcode, haversineMeters } from './geo.js';
+import { getSchoolsByDistrict } from './data.js';
+import { renderSchoolList } from './ui.js';
 
 let map;
 let geocoder;
@@ -103,11 +105,24 @@ async function onSubmit(e) {
     return;
   }
 
-  // M1 完成态：识别成功后把家标在地图上
   placeHomeMarker(location);
   showToast(`✓ 已识别：${location.name}（${districtName(district)}）`);
-  console.log('[M1] 查询通过：', { location, district });
-  // M2 将从这里继续：加载该区学校 JSON、计算 Haversine、渲染列表
+  await loadAndRenderSchools(district, location);
+}
+
+async function loadAndRenderSchools(districtId, home) {
+  const container = document.getElementById('school-list');
+  try {
+    const schools = await getSchoolsByDistrict(districtId);
+    const withDistance = schools
+      .map(s => ({ ...s, distance: haversineMeters(home.lng, home.lat, s.lng, s.lat) }))
+      .sort((a, b) => a.distance - b.distance);
+    renderSchoolList(withDistance, container);
+    console.log(`[M2] 渲染 ${districtName(districtId)} ${withDistance.length} 所学校`);
+  } catch (err) {
+    console.error('[M2] 学校数据加载失败：', err);
+    container.innerHTML = `<p class="empty">学校数据加载失败：${err.message}</p>`;
+  }
 }
 
 function onPickOnMap() {
