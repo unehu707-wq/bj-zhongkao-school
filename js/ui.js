@@ -79,9 +79,14 @@ function createCard(school) {
       ${TYPE_LABEL[school.type] || school.type} · ${SCOPE_LABEL[school.admissionScope] || school.admissionScope}
     </div>
     <div class="school-address">${escapeHtml(school.address)}</div>
+    <div class="school-actions">
+      <button type="button" class="btn-link view-route-btn">看路线 →</button>
+    </div>
   `;
   return card;
 }
+
+export { MODE_LABEL };
 
 // state: 'pending' | 'error' | { duration }
 export function setCardCommute(card, state) {

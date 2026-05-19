@@ -20,6 +20,11 @@
   padding: 0;
 }
 
+/* HTML hidden 属性兜底：display: flex/grid 会覆盖默认 display: none */
+[hidden] {
+  display: none !important;
+}
+
 html, body {
   height: 100%;
 }
@@ -296,6 +301,71 @@ main {
 }
 .mode-tabs button:active:not(.active) {
   background: #f0f6ff;
+}
+
+.school-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-sm);
+}
+.btn-link {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+}
+.btn-link:active {
+  opacity: 0.5;
+}
+
+/* 全屏看路线模式 */
+.route-view-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.route-view-header button {
+  background: transparent;
+  border: none;
+  font-size: 15px;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: var(--space-xs) var(--space-sm);
+}
+.route-view-header span {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+body.route-view .app-header,
+body.route-view .search-form,
+body.route-view .mode-tabs,
+body.route-view .school-list,
+body.route-view .app-footer {
+  display: none !important;
+}
+body.route-view main {
+  padding: 0;
+}
+body.route-view #app {
+  max-width: none !important;
+}
+body.route-view .map-container {
+  height: 100vh;
+  min-height: 100vh;
+  border-radius: 0;
+  padding-top: 48px; /* 留出 route-view-header 的空间 */
 }
 
 @media (min-width: 768px) {

@@ -1,8 +1,14 @@
 import { TRAVEL_MODES } from './config.js';
 
+// 用于"计算用时"的服务实例（不绑 map，不渲染）
 let driving = null;
 let transfer = null;
 let riding = null;
+
+// 用于"在主地图上画路线"的服务实例（绑定主地图）
+let drawDriving = null;
+let drawTransfer = null;
+let drawRiding = null;
 
 function ensureServices() {
   const AMap = window.AMap;
@@ -21,6 +27,19 @@ function ensureServices() {
   }
   if (!riding) {
     riding = new AMap.Riding();
+  }
+}
+
+function ensureDrawServices(map) {
+  const AMap = window.AMap;
+  if (!drawDriving) {
+    drawDriving = new AMap.Driving({ map, city: '北京', policy: AMap.DrivingPolicy.LEAST_TIME, autoFitView: true });
+  }
+  if (!drawTransfer) {
+    drawTransfer = new AMap.Transfer({ map, city: '北京', policy: AMap.TransferPolicy.LEAST_TIME, autoFitView: true });
+  }
+  if (!drawRiding) {
+    drawRiding = new AMap.Riding({ map, autoFitView: true });
   }
 }
 
@@ -102,4 +121,38 @@ function calcRiding(origin, destination) {
       }
     });
   });
+}
+
+// 在指定 map 上绘制路径（会先清掉之前所有模式的路径）
+export function drawRouteOnMap(map, mode, origin, destination) {
+  ensureDrawServices(map);
+  drawDriving.clear();
+  drawTransfer.clear();
+  drawRiding.clear();
+
+  let drawer;
+  if (mode === TRAVEL_MODES.DRIVING) {
+    drawer = drawDriving;
+  } else if (mode === TRAVEL_MODES.TRANSIT) {
+    const { date, time } = nextWeekdayMorning();
+    drawTransfer.leaveAt(time, date);
+    drawer = drawTransfer;
+  } else if (mode === TRAVEL_MODES.RIDING) {
+    drawer = drawRiding;
+  } else {
+    return Promise.reject(new Error('未知通勤方式：' + mode));
+  }
+
+  return new Promise((resolve, reject) => {
+    drawer.search(origin, destination, (status, result) => {
+      if (status === 'complete') resolve(result);
+      else reject(new Error('路径绘制失败'));
+    });
+  });
+}
+
+export function clearRoutes() {
+  if (drawDriving) drawDriving.clear();
+  if (drawTransfer) drawTransfer.clear();
+  if (drawRiding) drawRiding.clear();
 }

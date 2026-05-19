@@ -2,8 +2,8 @@ import { loadAMap } from './amap-loader.js';
 import { DEFAULT_CENTER, DEFAULT_ZOOM, DISTRICTS, DEFAULT_TRAVEL_MODE } from './config.js';
 import { isBeijingAdcode, haversineMeters } from './geo.js';
 import { getSchoolsByDistrict } from './data.js';
-import { renderSchoolList, renderModeTabs, setCardCommute } from './ui.js';
-import { calcRoute } from './routing.js';
+import { renderSchoolList, renderModeTabs, setCardCommute, MODE_LABEL } from './ui.js';
+import { calcRoute, drawRouteOnMap, clearRoutes } from './routing.js';
 import { createIntersectObserver } from './observer.js';
 
 let map;
@@ -79,6 +79,51 @@ function bindFormEvents() {
 
   form.addEventListener('submit', onSubmit);
   pickBtn.addEventListener('click', onPickOnMap);
+
+  // M4: 看路线 - 学校卡片"看路线"按钮（事件委托）
+  document.getElementById('school-list').addEventListener('click', e => {
+    const btn = e.target.closest('.view-route-btn');
+    if (!btn) return;
+    const card = btn.closest('.school-card');
+    if (!card) return;
+    const school = schoolsById.get(card.dataset.id);
+    if (school) openRouteView(school);
+  });
+
+  document.getElementById('route-back-btn').addEventListener('click', closeRouteView);
+}
+
+function openRouteView(school) {
+  if (!home || !map) return;
+  document.body.classList.add('route-view');
+  document.getElementById('route-view-title').textContent =
+    `${school.shortName || school.name} · ${MODE_LABEL[currentMode]}`;
+  document.getElementById('route-view-header').hidden = false;
+
+  // CSS 改变后等浏览器完成 layout，再让 AMap 重新测量容器并画路线
+  setTimeout(() => {
+    map.resize();
+    if (homeMarker) homeMarker.hide();
+    drawRouteOnMap(map, currentMode, [home.lng, home.lat], [school.lng, school.lat])
+      .catch(err => {
+        console.warn('[M4] 路径绘制失败：', err.message);
+        showToast(`路径绘制失败：${err.message}`);
+      });
+  }, 100);
+}
+
+function closeRouteView() {
+  clearRoutes();
+  document.body.classList.remove('route-view');
+  document.getElementById('route-view-header').hidden = true;
+  setTimeout(() => {
+    if (homeMarker) homeMarker.show();
+    map.resize();
+    if (home) {
+      map.setCenter([home.lng, home.lat]);
+      map.setZoom(14);
+    }
+  }, 100);
 }
 
 function onAddressSelect(e) {
