@@ -88,6 +88,109 @@ main {
   color: var(--color-text-muted);
 }
 
+.search-form {
+  background: var(--color-card);
+  padding: var(--space-md);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-md);
+}
+.search-form .field {
+  margin-bottom: var(--space-md);
+}
+.search-form label {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+.search-form input,
+.search-form select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search-form input:focus,
+.search-form select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.search-form .input-with-action {
+  display: flex;
+  gap: var(--space-sm);
+}
+.search-form .input-with-action input {
+  flex: 1;
+}
+.search-form .hint {
+  display: block;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+  line-height: 1.4;
+}
+.search-form button[type="submit"] {
+  width: 100%;
+  padding: var(--space-md);
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.search-form button[type="submit"]:disabled {
+  background: #b5c8e8;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  padding: 0 var(--space-md);
+  font-size: 13px;
+  color: var(--color-primary);
+  background: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn-secondary:active {
+  background: #f0f6ff;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 80%;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: 14px;
+  text-align: center;
+  z-index: 9999;
+  animation: toast-fade 3s ease;
+}
+@keyframes toast-fade {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 高德 AutoComplete 下拉样式微调，确保层级正确 */
+.amap-sug-result {
+  z-index: 100;
+}
+
 @media (min-width: 768px) {
   #app {
     max-width: 720px;
