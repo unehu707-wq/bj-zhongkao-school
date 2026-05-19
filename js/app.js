@@ -1,13 +1,23 @@
 import { loadAMap } from './amap-loader.js';
-import { DEFAULT_CENTER, DEFAULT_ZOOM, DISTRICTS } from './config.js';
+import { DEFAULT_CENTER, DEFAULT_ZOOM, DISTRICTS, DEFAULT_TRAVEL_MODE } from './config.js';
 import { isBeijingAdcode, haversineMeters } from './geo.js';
 import { getSchoolsByDistrict } from './data.js';
-import { renderSchoolList } from './ui.js';
+import { renderSchoolList, renderModeTabs, setCardCommute } from './ui.js';
+import { calcRoute } from './routing.js';
+import { createIntersectObserver } from './observer.js';
 
 let map;
 let geocoder;
 let homeMarker;
 let selectedAddress = null;
+
+// 当前查询上下文（M3 新增）
+let home = null;                       // { lng, lat }
+let cardsById = new Map();             // id -> card element
+let schoolsById = new Map();           // id -> school object
+let currentMode = DEFAULT_TRAVEL_MODE;
+let requestVersion = 0;                // 防请求竞态
+let cardObserver = null;
 
 async function init() {
   populateDistricts();
@@ -30,9 +40,9 @@ async function init() {
 
     geocoder = new AMap.Geocoder();
 
-    console.log('[M1] 地图与地址联想就绪');
+    console.log('[M3] 地图、地址联想、路径规划就绪');
   } catch (err) {
-    console.error('[M1] 初始化失败：', err);
+    console.error('[M3] 初始化失败：', err);
     showError(err.message);
   }
 }
@@ -63,7 +73,6 @@ function bindFormEvents() {
   });
   select.addEventListener('change', validate);
 
-  // 移动端键盘弹起时滚动到中心，防止遮挡
   input.addEventListener('focus', () => {
     setTimeout(() => input.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300);
   });
@@ -81,7 +90,6 @@ function onAddressSelect(e) {
     lat: poi.location.lat,
     adcode: poi.adcode,
   };
-  console.log('[M1] 选中联想结果：', selectedAddress);
 }
 
 async function onSubmit(e) {
@@ -90,7 +98,6 @@ async function onSubmit(e) {
   const district = document.getElementById('district-select').value;
 
   let location = selectedAddress;
-  // 用户没从联想里选 / 改了文本 / 缺 adcode → 走 geocoder 兜底
   if (!location || location.name !== address || !location.adcode) {
     location = await geocodeAddress(address);
     if (!location) {
@@ -99,30 +106,70 @@ async function onSubmit(e) {
     }
   }
 
-  // F-09 非北京地址拦截
   if (!isBeijingAdcode(location.adcode)) {
     showToast('本工具仅支持北京市内地址');
     return;
   }
 
+  home = { lng: location.lng, lat: location.lat };
   placeHomeMarker(location);
   showToast(`✓ 已识别：${location.name}（${districtName(district)}）`);
-  await loadAndRenderSchools(district, location);
+  await loadAndRenderSchools(district);
+  setupModeTabsAndObserver();
 }
 
-async function loadAndRenderSchools(districtId, home) {
+async function loadAndRenderSchools(districtId) {
   const container = document.getElementById('school-list');
   try {
     const schools = await getSchoolsByDistrict(districtId);
     const withDistance = schools
       .map(s => ({ ...s, distance: haversineMeters(home.lng, home.lat, s.lng, s.lat) }))
       .sort((a, b) => a.distance - b.distance);
-    renderSchoolList(withDistance, container);
-    console.log(`[M2] 渲染 ${districtName(districtId)} ${withDistance.length} 所学校`);
+
+    schoolsById = new Map(withDistance.map(s => [s.id, s]));
+    const cards = renderSchoolList(withDistance, container);
+    cardsById = new Map(cards.map(card => [card.dataset.id, card]));
+    console.log(`[M3] 渲染 ${districtName(districtId)} ${withDistance.length} 所学校`);
   } catch (err) {
-    console.error('[M2] 学校数据加载失败：', err);
+    console.error('[M3] 学校数据加载失败：', err);
     container.innerHTML = `<p class="empty">学校数据加载失败：${err.message}</p>`;
   }
+}
+
+function setupModeTabsAndObserver() {
+  renderModeTabs(document.getElementById('mode-tabs'), currentMode, onModeChange);
+  if (cardObserver) cardObserver.disconnect();
+  cardObserver = createIntersectObserver(onCardEnter);
+  cardsById.forEach(card => cardObserver.observe(card));
+}
+
+function onModeChange(mode) {
+  currentMode = mode;
+  requestVersion++;
+  // 重置所有卡片为 pending，并重新触发可见性检测
+  cardsById.forEach(card => {
+    setCardCommute(card, 'pending');
+    cardObserver.unobserve(card);
+    cardObserver.observe(card);
+  });
+}
+
+function onCardEnter(card) {
+  const myVersion = requestVersion;
+  const id = card.dataset.id;
+  const school = schoolsById.get(id);
+  if (!school || !home) return;
+
+  calcRoute(currentMode, [home.lng, home.lat], [school.lng, school.lat])
+    .then(result => {
+      if (myVersion !== requestVersion) return; // 已过期，丢弃
+      setCardCommute(card, result);
+    })
+    .catch(err => {
+      if (myVersion !== requestVersion) return;
+      console.warn(`[M3] ${school.shortName} ${currentMode} 失败：`, err.message);
+      setCardCommute(card, 'error');
+    });
 }
 
 function onPickOnMap() {
@@ -187,7 +234,6 @@ function showToast(message) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
   toast.hidden = false;
-  // 重置动画
   toast.style.animation = 'none';
   void toast.offsetWidth;
   toast.style.animation = '';
