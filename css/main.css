@@ -364,6 +364,20 @@ main {
   background: #e6f4ff;
   color: #0958d9;
 }
+/* v0.3: 已核对 badge。title 属性显示 issueDescription/source */
+.school-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+  line-height: 1.5;
+  margin-left: auto;
+  cursor: help;
+}
+.school-badge.verified {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
 .school-meta {
   display: flex;
   flex-wrap: wrap;

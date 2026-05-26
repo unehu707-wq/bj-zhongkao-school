@@ -4,8 +4,11 @@
 北京中考-哪个学校离我近：纯前端 H5 工具，帮家长在填报志愿时按"通勤便利度"评估高中。
 
 ## 当前状态
-**MVP 完工**。PRD v0.2 所有 P0 (F-01 ~ F-12) 已实现，9 个 git commit 对应 M0→M8。
-下一步候选：部署上线（GitHub Pages / Vercel）、完善 enrichments、做 P1 功能。
+**v0.3 数据可信度改造进行中**(海淀区先行试点)。MVP 已上线 https://unehu707-wq.github.io/bj-zhongkao-school/
+- v0.2 完工:F-01 ~ F-12 全实现 + GitHub Pages 部署
+- v0.3 PR1:enrichments schema 加核对字段(verified/source/addressOverride 等)+ 修 merge bug(高德搜不到的 enrichments 学校会丢失)+ UI 加"已核对"badge
+- v0.3 PR2 进行中:用教委 2025 中招简章核对海淀区名单(用户截图发我 OCR + 三路 diff)
+- v0.3 PR3 待做:address-check.html 高德内部一致性校验工具
 
 ## 技术栈硬约束（不要建议变更）
 - **纯前端**，不引入任何后端
@@ -25,11 +28,20 @@
 
 ## 关键架构决策（动之前先理解）
 
-### 数据层（M8 决定）
+### 数据层（M8 决定，v0.3 增强）
 - 学校的 name/address/lng/lat **从高德 PlaceSearch 实时拉**，不是静态 JSON
 - 政策性字段（admissionScope/aliases/shortName/isBranch/hasInternationalDept）由 `data/enrichments.json` 手动补充，按 name 键 merge
+- **v0.3 加了核对字段**:verified/verifiedAt/source/sourceUrl/addressOverride/issueDescription/district/lng/lat。详见 [data/README.md](data/README.md)
+- **v0.3 修了 merge bug**:enrichments 里有但高德搜不到的学校,以前会丢失;现在 `district` 字段匹配则追加,标 `notFoundInAmap:true`
+- **v0.3 加了 addressOverride 机制**:enrichments 有 addressOverride → UI 显示用它覆盖高德地址(但 lng/lat 保留高德的,路线规划仍准)
 - 30 天 localStorage 缓存，刷新页面秒开
 - **QPS 防护是必需的，不要简化**：页之间 700ms 间隔 + 区之间 1500ms + CUQPS 报错指数退避重试 + in-flight Map 去重。免费 Key QPS 上限很低，去掉任何一层都会 CUQPS_HAS_EXCEEDED_THE_LIMIT 报错
+
+### v0.3 数据可信度核心理念
+- **Claude 不是权威源**,只是整理工(等同自媒体可信度)
+- **教委公告(bjeea.cn 各区中招简章)才是真权威**
+- 工作流:Claude 整理初版(verified:false)→ 用户对照教委核对 → 三路 diff 工具辅助 → 一致才标 verified:true
+- 卡片上 ✓ 已核对 badge 是数据可信度的视觉信号,**未核对学校不能给家长当作权威信息**
 
 ### F-12 设计偏离 PRD（M6 决定）
 - PRD 原文："命中后直接进入该校详情，跳过选区"
@@ -67,7 +79,9 @@
 | `js/search.js` | 学校名/别名子串匹配 + 前缀优先 |
 | `js/storage.js` | localStorage 封装（地址/区/方式记忆） |
 | `js/config.js` | 高德 Key、常量、4 区枚举、FEEDBACK_EMAIL 占位符 |
-| `data/enrichments.json` | 16 所顶部学校的政策性补丁（用户维护） |
+| `data/enrichments.json` | 学校政策性补丁 + v0.3 核对状态（用户维护） |
+| `diff-tool.html` | v0.3 后新增:三路名单 diff 工具(Claude vs 高德 vs 教委) |
+| `address-check.html` | v0.3 后新增:高德 Geocoder 内部一致性校验工具 |
 
 ## v0.3 候选改进（不阻塞）
 - F-11 反馈渠道升级（mailto → 腾讯问卷 / 微信，因 mailto 对中考家长 UX 极差）
@@ -81,4 +95,10 @@
 - 部署前需在 `js/config.js` 把 `FEEDBACK_EMAIL` 占位符改成真实邮箱（或先改成腾讯问卷链接，参考 v0.3 候选）
 - 部署到 GitHub Pages 时，路径有子目录前缀 `/repo-name/`，相对路径资源已经做了正确处理
 - 部署后回高德 LBS 控制台把部署域名追加到 Key 白名单（如 `*.github.io` / `username.github.io`）
+- **⚠️ 白名单踩坑(v0.3 阶段发现)**:更新白名单时**必须保留 `127.0.0.1` 和 `localhost`**,不然本地 Live Server 开发会报 `INVALID_USER_DOMAIN`,地图加载不出来。正确白名单形如:
+  ```
+  unehu707-wq.github.io
+  127.0.0.1
+  localhost
+  ```
 - 高德 Key 已在前端 HTML 里暴露：当前由"安全密钥 + 域名白名单 + 每日 20000 上限"三重保护

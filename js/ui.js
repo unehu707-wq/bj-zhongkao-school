@@ -81,12 +81,16 @@ function createCard(school) {
 
   const branchTag = school.isBranch ? '<span class="tag tag-branch">分校</span>' : '';
   const intlTag = school.hasInternationalDept ? '<span class="tag tag-intl">含国际部</span>' : '';
+  const verifiedBadge = school.verified === true
+    ? `<span class="school-badge verified" title="${escapeHtml(school.issueDescription || '已核对'+(school.source ? ' · '+school.source : ''))}">✓ 已核对</span>`
+    : '';
 
   card.innerHTML = `
     <div class="school-header">
       <span class="school-name">${escapeHtml(school.shortName || school.name)}</span>
       ${branchTag}
       ${intlTag}
+      ${verifiedBadge}
     </div>
     <div class="school-meta">
       <span class="distance">${formatDistance(school.distance)}</span>
