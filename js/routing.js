@@ -1,5 +1,47 @@
 import { TRAVEL_MODES } from './config.js';
 
+// routing 结果缓存（localStorage，缓解高德配额）
+// key = 通勤方式 + 起点经纬度 + 终点经纬度；经纬度截 5 位小数（约 1 米）吸收浮点噪声
+// TTL 7 天：公交线路/路况会变，过期重查
+const ROUTE_CACHE_PREFIX = 'school-finder/route-';
+const ROUTE_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function coord(n) { return Number(n).toFixed(5); }
+
+function routeCacheKey(mode, origin, destination) {
+  return `${ROUTE_CACHE_PREFIX}${mode}|${coord(origin[0])},${coord(origin[1])}|${coord(destination[0])},${coord(destination[1])}`;
+}
+
+function readRouteCache(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > ROUTE_CACHE_TTL_MS) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function writeRouteCache(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+  } catch {
+    // localStorage 满 / 隐私模式：静默降级，不缓存
+  }
+}
+
+// 清空所有 routing 缓存（数据更新后想强制重查时用）
+export function clearRouteCache() {
+  Object.keys(localStorage)
+    .filter(k => k.startsWith(ROUTE_CACHE_PREFIX))
+    .forEach(k => { try { localStorage.removeItem(k); } catch {} });
+}
+
 // 用于"计算用时"的服务实例（不绑 map，不渲染）
 let driving = null;
 let transfer = null;
@@ -75,19 +117,29 @@ function nextWeekdayMorning() {
 }
 
 export function calcRoute(mode, origin, destination) {
+  // 先查缓存，命中直接返回，不调高德
+  const cacheKey = routeCacheKey(mode, origin, destination);
+  const cached = readRouteCache(cacheKey);
+  if (cached) return Promise.resolve(cached);
+
   ensureServices();
+  let promise;
   if (mode === TRAVEL_MODES.DRIVING) {
-    return search(driving, origin, destination, '驾车', r => r.routes && r.routes[0]);
-  }
-  if (mode === TRAVEL_MODES.TRANSIT) {
+    promise = search(driving, origin, destination, '驾车', r => r.routes && r.routes[0]);
+  } else if (mode === TRAVEL_MODES.TRANSIT) {
     const { date, time } = nextWeekdayMorning();
     transfer.leaveAt(time, date);
-    return search(transfer, origin, destination, '公交', r => r.plans && r.plans[0]);
+    promise = search(transfer, origin, destination, '公交', r => r.plans && r.plans[0]);
+  } else if (mode === TRAVEL_MODES.RIDING) {
+    promise = search(riding, origin, destination, '骑行', r => r.routes && r.routes[0]);
+  } else {
+    return Promise.reject(new Error('未知通勤方式：' + mode));
   }
-  if (mode === TRAVEL_MODES.RIDING) {
-    return search(riding, origin, destination, '骑行', r => r.routes && r.routes[0]);
-  }
-  return Promise.reject(new Error('未知通勤方式：' + mode));
+  // 成功才写缓存；失败(含 QUOTA)不缓存，下次还能重试
+  return promise.then(result => {
+    writeRouteCache(cacheKey, result);
+    return result;
+  });
 }
 
 // 把 AMap 的 search 回调包成 Promise；pickRoute 从 result 里取出"第一条路线"对象（含 distance、time）
