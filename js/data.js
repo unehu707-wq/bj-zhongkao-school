@@ -46,6 +46,7 @@ function buildOrphans(amapSchools, enrichments, districtId) {
     orphans.push({
       id: `enrich-${name}`,
       name,
+      type: 'public', // 默认公办,patch 里若有 type 字段会覆盖
       address: patch.addressOverride || patch.address || '',
       lng: patch.lng ?? null,
       lat: patch.lat ?? null,

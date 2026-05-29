@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>海淀区 B 类学校批量 Geocode（v0.3 工具）</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; max-width: 1100px; margin: 16px auto; padding: 0 16px; color: #333; }
+  h1 { font-size: 18px; }
+  .meta { background: #f7f8fa; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; }
+  button { padding: 8px 16px; background: #1677ff; color: #fff; border: 0; border-radius: 6px; cursor: pointer; font-size: 14px; }
+  button:disabled { background: #999; cursor: not-allowed; }
+  #status { padding: 8px; margin: 8px 0; background: #fff4e5; border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+  th, td { border: 1px solid #eee; padding: 4px 8px; text-align: left; }
+  th { background: #f0f3f7; }
+  tr.ok { background: #e8f5e9; }
+  tr.fail { background: #ffebee; }
+  textarea { width: 100%; font: 11px/1.4 Consolas, monospace; }
+  .actions { margin: 12px 0; display: flex; gap: 8px; }
+</style>
+</head>
+<body>
+<h1>海淀区 B 类学校批量 Geocode（v0.3 数据可信度工具）</h1>
+<div class="meta">
+  对 29 所教委 2025 中招简章有、但高德 PlaceSearch 没返回的学校，调用 <code>AMap.Geocoder</code> 把教委地址转成经纬度。每个查询间隔 800ms 防 CUQPS。
+  跑完后下方 textarea 会输出 enrichments JSON 片段，可以复制粘到 <code>data/enrichments.json</code>。
+</div>
+
+<div class="actions">
+  <button id="start">开始批量查询（29 所）</button>
+  <span id="status">空闲</span>
+</div>
+
+<table>
+  <thead><tr><th>代码</th><th>校名</th><th>教委地址</th><th>状态</th><th>lng</th><th>lat</th><th>高德反查地址</th></tr></thead>
+  <tbody id="results"></tbody>
+</table>
+
+<h2>导出 enrichments JSON 片段</h2>
+<textarea id="output" rows="25" placeholder="跑完点【复制】"></textarea>
+<div class="actions">
+  <button id="copy">复制 JSON 到剪贴板</button>
+</div>
+
+<script type="module">
+import { loadAMap } from './js/amap-loader.js';
+
+// B 类 29 所:教委有 + 高德 PlaceSearch 搜不到。字段对齐 enrichments schema
+const SCHOOLS = [
+  { name: '北京市第一〇一中学', address: '北京市海淀区颐和园路 11 号', shortName: '101 中学', aliases: ['101', '一零一'], admissionScope: 'citywide', hasInternationalDept: true },
+  { name: '北京交通大学附属中学', address: '北京市海淀区高粱桥路 12 号', shortName: '北交大附中', aliases: ['北交大附中'], admissionScope: 'citywide' },
+  { name: '北京市育英学校', address: '北京市海淀区万寿路西街 11 号', shortName: '育英学校', aliases: ['育英'], admissionScope: 'district' },
+  { name: '中国人民大学附属中学翠微学校', address: '北京市海淀区翠微路 1 号', shortName: '人大附翠微', aliases: ['人大附翠微'], admissionScope: 'district', isBranch: true, parentSchool: '中国人民大学附属中学' },
+  { name: '北京市海淀区教师进修学校附属实验学校', address: '北京市海淀区远大路 34 号', shortName: '教师进修附实验', aliases: ['教师进修附属'], admissionScope: 'district' },
+  { name: '首都师范大学第二附属中学', address: '北京市海淀区彰化路 8 号', shortName: '首师大二附中', aliases: ['首师大二附'], admissionScope: 'district' },
+  { name: '北京市海淀实验中学', address: '北京市海淀区紫竹院路 96 号', shortName: '海淀实验中学', aliases: ['海淀实验'], admissionScope: 'district' },
+  { name: '北京交通大学附属中学第二分校', address: '北京市海淀区高粱桥斜街 3 号', shortName: '北交大附二分校', aliases: ['北交大附二'], admissionScope: 'district', isBranch: true, parentSchool: '北京交通大学附属中学' },
+  { name: '北京交通大学附属中学分校', address: '北京市海淀区学院南路 1 号', shortName: '北交大附分校', aliases: ['北交大附分校'], admissionScope: 'district', isBranch: true, parentSchool: '北京交通大学附属中学' },
+  { name: '北京市中关村中学知春分校', address: '北京市海淀区知春东里 12 号楼', shortName: '中关村中学知春', aliases: ['中关村知春'], admissionScope: 'district', isBranch: true, parentSchool: '北京市中关村中学' },
+  { name: '北京交通大学附属中学东校区', address: '北京市海淀区马甸西路 2 号', shortName: '北交大附东', aliases: ['北交大附东'], admissionScope: 'district', isBranch: true, parentSchool: '北京交通大学附属中学' },
+  { name: '北京大学附属中学北医分校', address: '北京市海淀区花园北路 40 号', shortName: '北大附北医', aliases: ['北医附中', '北大附中北医分校'], admissionScope: 'district', isBranch: true, parentSchool: '北京大学附属中学' },
+  { name: '北京一零一中矿大分校', address: '北京市海淀区学院路丁 11 号', shortName: '101 矿大分校', aliases: ['101 矿大'], admissionScope: 'district', isBranch: true, parentSchool: '北京市第一〇一中学' },
+  { name: '北京一零一中石油分校', address: '北京市海淀区学院路 20 号', shortName: '101 石油分校', aliases: ['101 石油'], admissionScope: 'district', isBranch: true, parentSchool: '北京市第一〇一中学' },
+  { name: '中国人民大学附属中学第二分校', address: '北京市海淀区蓝靛厂路 25 号', shortName: '人大附二分', aliases: ['人大附二分校'], admissionScope: 'district', isBranch: true, parentSchool: '中国人民大学附属中学' },
+  { name: '北京航空航天大学实验学校', address: '北京市海淀区学院路 37 号', shortName: '北航实验', aliases: ['北航附中'], admissionScope: 'district' },
+  { name: '首都师范大学附属育新学校', address: '北京市海淀区西三旗新康园 4 号', shortName: '首师大附育新', aliases: ['育新学校'], admissionScope: 'district' },
+  { name: '中央民族大学附属中学', address: '北京市海淀区法华寺路甲 5 号', shortName: '民大附中', aliases: ['民大附中', '中央民大附中'], admissionScope: 'citywide', hasInternationalDept: true },
+  { name: '北京市第五十七中学上庄分校', address: '北京市海淀区上庄镇上庄路 43 号', shortName: '57 中上庄', aliases: ['57 中上庄'], admissionScope: 'district', isBranch: true, parentSchool: '北京市第五十七中学' },
+  { name: '北京市第十九中学闵庄校区', address: '北京市海淀区闵庄路 56 号', shortName: '19 中闵庄', aliases: ['19 中闵庄'], admissionScope: 'district', isBranch: true, parentSchool: '北京市第十九中学' },
+  { name: '首都师范大学附属中学第一分校', address: '北京市海淀区阜石路甲 59 号', shortName: '首师大附一分校', aliases: ['首师大附一分'], admissionScope: 'district', isBranch: true, parentSchool: '首都师范大学附属中学' },
+  { name: '北京市海淀区教师进修附属实验香山分校', address: '北京市海淀区香山南辛村 1 号', shortName: '教师进修香山', aliases: ['教师进修香山'], admissionScope: 'district' },
+  { name: '北京市中关村外国语学校', address: '北京市海淀区西北旺冷泉东路 66 号', shortName: '中关村外国语', aliases: ['中关村外语'], admissionScope: 'district' },
+  { name: '北京理工大学附属中学分校', address: '北京市海淀区紫竹院南路 11 号', shortName: '北理工附中分校', aliases: ['北理工附分'], admissionScope: 'district', isBranch: true, parentSchool: '北京理工大学附属中学' },
+  { name: '中国人民大学附属中学分校', address: '北京市海淀区双榆树南里二区 3 号', shortName: '人大附分校', aliases: ['人大附分校'], admissionScope: 'district', isBranch: true, parentSchool: '中国人民大学附属中学' },
+  { name: '清华大学附属实验学校', address: '北京市海淀区清华大学院内', shortName: '清华附实验', aliases: ['清华附实验'], admissionScope: 'district', isBranch: true, parentSchool: '清华大学附属中学' },
+  { name: '人大附中西山学校', address: '北京市海淀区马连洼南路 9 号', shortName: '人大附西山', aliases: ['人大附西山'], admissionScope: 'district', isBranch: true, parentSchool: '中国人民大学附属中学' },
+  { name: '北京市海淀区青苗学校', address: '北京市海淀区四季青镇巨山路 21 号', shortName: '青苗学校', aliases: ['青苗'], admissionScope: 'district' },
+  { name: '首都师范大学附属玉泉学校', address: '北京市海淀区闵庄南路 17 号', shortName: '首师大附玉泉', aliases: ['首师大附玉泉'], admissionScope: 'district', isBranch: true, parentSchool: '首都师范大学附属中学' },
+];
+
+const VERIFIED_AT = new Date().toISOString().slice(0, 10);
+const SOURCE = '2025 海淀中招简章';
+
+const $status = document.getElementById('status');
+const $results = document.getElementById('results');
+const $output = document.getElementById('output');
+const $start = document.getElementById('start');
+const $copy = document.getElementById('copy');
+
+// 预填表格
+SCHOOLS.forEach((s, i) => {
+  const tr = document.createElement('tr');
+  tr.id = 'row-' + i;
+  tr.innerHTML = `<td>${i+1}</td><td>${s.name}</td><td>${s.address}</td><td class="st">待跑</td><td class="lng"></td><td class="lat"></td><td class="rev"></td>`;
+  $results.appendChild(tr);
+});
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function geocodeOne(geocoder, address) {
+  return new Promise(resolve => {
+    geocoder.getLocation(address, (status, result) => {
+      if (status === 'complete' && result.geocodes && result.geocodes.length) {
+        const g = result.geocodes[0];
+        const [lng, lat] = g.location.toString().split(',').map(Number);
+        resolve({ ok: true, lng, lat, reverse: g.formattedAddress });
+      } else {
+        resolve({ ok: false, reason: status + ': ' + (result?.info || 'no match') });
+      }
+    });
+  });
+}
+
+$start.addEventListener('click', async () => {
+  $start.disabled = true;
+  $status.textContent = '加载高德 SDK ...';
+  try {
+    const AMap = await loadAMap();
+    const geocoder = new AMap.Geocoder({ city: '北京' });
+    const out = {};
+
+    for (let i = 0; i < SCHOOLS.length; i++) {
+      const s = SCHOOLS[i];
+      const tr = document.getElementById('row-' + i);
+      $status.textContent = `查询中 ${i+1}/${SCHOOLS.length}: ${s.name}`;
+      tr.querySelector('.st').textContent = '查询中…';
+
+      const r = await geocodeOne(geocoder, s.address);
+      if (r.ok) {
+        tr.className = 'ok';
+        tr.querySelector('.st').textContent = '✓';
+        tr.querySelector('.lng').textContent = r.lng.toFixed(6);
+        tr.querySelector('.lat').textContent = r.lat.toFixed(6);
+        tr.querySelector('.rev').textContent = r.reverse;
+        out[s.name] = {
+          shortName: s.shortName,
+          aliases: s.aliases || [],
+          admissionScope: s.admissionScope || 'district',
+          ...(s.isBranch ? { isBranch: true, parentSchool: s.parentSchool } : {}),
+          ...(s.hasInternationalDept ? { hasInternationalDept: true } : {}),
+          verified: true,
+          verifiedAt: VERIFIED_AT,
+          source: SOURCE,
+          addressOverride: s.address,
+          district: 'haidian',
+          lng: r.lng,
+          lat: r.lat,
+        };
+      } else {
+        tr.className = 'fail';
+        tr.querySelector('.st').textContent = '✗ ' + r.reason;
+      }
+
+      $output.value = JSON.stringify(out, null, 2);
+      await sleep(800);
+    }
+
+    $status.textContent = `完成,共 ${Object.keys(out).length}/${SCHOOLS.length} 成功`;
+  } catch (e) {
+    $status.textContent = '错误:' + e.message;
+    console.error(e);
+  } finally {
+    $start.disabled = false;
+  }
+});
+
+$copy.addEventListener('click', () => {
+  $output.select();
+  navigator.clipboard.writeText($output.value).then(() => {
+    $status.textContent = '✓ 已复制到剪贴板';
+  }).catch(() => {
+    document.execCommand('copy');
+    $status.textContent = '✓ 已复制(降级 execCommand)';
+  });
+});
+</script>
+</body>
+</html>

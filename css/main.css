@@ -331,6 +331,19 @@ main {
   background: var(--color-card);
   border-radius: var(--radius);
 }
+/* v0.3: 学校列表头,显示总数 + 已核对比例 */
+.school-list-summary {
+  padding: var(--space-sm) var(--space-md);
+  background: #f0f3f7;
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+.school-list-summary strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
 .school-card {
   background: var(--color-card);
   padding: var(--space-md);

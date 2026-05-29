@@ -1,10 +1,10 @@
 {
-  "中国人民大学附属中学": {
-    "shortName": "人大附中",
-    "aliases": ["人大附", "RDFZ", "人大附中本部"],
-    "admissionScope": "citywide",
-    "hasInternationalDept": true
+  "_meta": {
+    "comment": "⚠️ v0.3 海淀区已按 2025 中招简章核对(verified:true),其他区(西城/朝阳/东城)为 v0.2 状态未核对。verified:false 的学校不能当作权威信息给家长决策。",
+    "verifiedDistricts": ["haidian"],
+    "version": "v0.3"
   },
+
   "北京市第四中学": {
     "shortName": "北京四中",
     "aliases": ["四中"],
@@ -14,17 +14,6 @@
     "shortName": "师大实验",
     "aliases": ["实验中学", "师大实验中学"],
     "admissionScope": "citywide",
-    "hasInternationalDept": true
-  },
-  "北京十一学校": {
-    "shortName": "十一学校",
-    "aliases": ["十一", "十一中"],
-    "admissionScope": "citywide"
-  },
-  "首都师范大学附属中学": {
-    "shortName": "首师大附",
-    "aliases": ["首师大附", "首师附"],
-    "admissionScope": "district",
     "hasInternationalDept": true
   },
   "北京市第八中学": {
@@ -66,25 +55,774 @@
     "parentSchool": "中国人民大学附属中学",
     "admissionScope": "district"
   },
-  "清华大学附属中学": {
-    "shortName": "清华附中",
-    "aliases": ["清华附"],
+
+  "中国人民大学附属中学": {
+    "shortName": "人大附中",
+    "aliases": ["人大附", "RDFZ", "人大附中本部"],
     "admissionScope": "citywide",
-    "hasInternationalDept": true
+    "hasInternationalDept": true,
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区中关村大街 37 号"
   },
   "北京大学附属中学": {
     "shortName": "北大附中",
     "aliases": ["北大附"],
-    "admissionScope": "citywide"
+    "admissionScope": "citywide",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章"
   },
-  "北京市第一零一中学": {
-    "shortName": "101中学",
-    "aliases": ["101", "一零一"],
-    "admissionScope": "citywide"
+  "清华大学附属中学": {
+    "shortName": "清华附中",
+    "aliases": ["清华附"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true,
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区中关村北大街"
+  },
+  "首都师范大学附属中学": {
+    "shortName": "首师大附",
+    "aliases": ["首师大附", "首师附"],
+    "admissionScope": "district",
+    "hasInternationalDept": true,
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区北洼路 33 号"
+  },
+  "北京理工大学附属中学": {
+    "shortName": "北理工附中",
+    "aliases": ["北理工附"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区车道沟东路 1 号"
+  },
+  "北京十一学校": {
+    "shortName": "十一学校",
+    "aliases": ["十一", "十一中", "北京市十一学校"],
+    "admissionScope": "citywide",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区玉泉路 66 号",
+    "issueDescription": "教委正名为「北京市十一学校」,高德简化为「北京十一学校」"
   },
   "北京市八一学校": {
     "shortName": "八一学校",
     "aliases": ["八一"],
-    "admissionScope": "citywide"
+    "admissionScope": "citywide",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区苏州街 29 号"
+  },
+  "北京市中关村中学": {
+    "shortName": "中关村中学",
+    "aliases": ["中关村中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区科学院南路甲 14 号"
+  },
+  "北京市二十中学": {
+    "shortName": "二十中",
+    "aliases": ["20中", "北京市第二十中学", "二十中学"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区清河小营西路 11 号",
+    "issueDescription": "教委正名为「北京市第二十中学」,高德简化为「北京市二十中学」"
+  },
+
+  "北京市育英中学": {
+    "shortName": "育英中学",
+    "aliases": ["育英中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区万寿路西街 14 号",
+    "issueDescription": "跟「北京市育英学校」(208001) 是两所不同学校,分别在万寿路西街 14 号和 11 号"
+  },
+  "北京十一实验中学": {
+    "shortName": "十一实验",
+    "aliases": ["十一实验中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区太平路 8 号"
+  },
+  "北京市玉渊潭中学": {
+    "shortName": "玉渊潭中学",
+    "aliases": ["玉渊潭中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区会城门路 8 号"
+  },
+  "北京市第五十七中学": {
+    "shortName": "57中",
+    "aliases": ["五十七中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区北蜂窝中路 6 号"
+  },
+  "北京实验学校": {
+    "shortName": "北京实验学校",
+    "aliases": ["北京实验学校(海淀)", "北实验"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区阜成路甲 3 号"
+  },
+  "北京外国语大学附属中学": {
+    "shortName": "北外附中",
+    "aliases": ["北外附"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区万寿寺北里 14 号"
+  },
+  "北京师范大学第三附属中学": {
+    "shortName": "北师大三附",
+    "aliases": ["北师大三附中", "北师三附"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区北三环中路甲 36 号"
+  },
+  "北京市第十九中学": {
+    "shortName": "19中",
+    "aliases": ["十九中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区万泉河路 83 号"
+  },
+  "清华附中学院路学校": {
+    "shortName": "清华附学院路",
+    "aliases": ["原中国地质大学附属中学"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "清华大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区成府路 20 号",
+    "issueDescription": "高德返回的地址为学院路 31 号,教委为成府路 20 号,以教委为准"
+  },
+  "清华附中志新学校": {
+    "shortName": "清华附志新",
+    "aliases": ["原北京科技大学附属中学"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "清华大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区志新路 36 号"
+  },
+  "北京市八一学校附属玉泉中学": {
+    "shortName": "八一附玉泉",
+    "aliases": ["八一玉泉"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京市八一学校",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区香山路 108 号"
+  },
+  "北京市清河中学": {
+    "shortName": "清河中学",
+    "aliases": ["清河中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区清河一街 83 号"
+  },
+  "中国农业大学附属中学": {
+    "shortName": "农大附中",
+    "aliases": ["农大附", "中农附"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区圆明园西路 3 号",
+    "issueDescription": "高德返回地址为天秀路,教委为圆明园西路 3 号,以教委为准"
+  },
+  "北京中法实验学校": {
+    "shortName": "中法实验",
+    "aliases": ["中法实验校"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区温泉镇环山村 2 号院"
+  },
+  "人大附中航天城学校": {
+    "shortName": "人大附航天城",
+    "aliases": ["人大附航天"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "中国人民大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区友谊路 111 号"
+  },
+  "清华大学附属中学上地学校": {
+    "shortName": "清华附上地",
+    "aliases": ["清华附上地校"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "清华大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区中关村北大街 2 号"
+  },
+  "北京市二十一世纪学校": {
+    "shortName": "21世纪学校",
+    "aliases": ["二十一世纪"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区恩济庄 46 号",
+    "issueDescription": "民办 220000 元/学年,中美高中课程合作项目"
+  },
+  "北京市志清中学": {
+    "shortName": "志清中学",
+    "aliases": ["志清", "清华志清", "原北京市清华志清中学"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区中关村北大街北京体育大学东侧",
+    "issueDescription": "民办,原名「北京市清华志清中学」"
+  },
+  "北京市建华实验学校": {
+    "shortName": "建华实验",
+    "aliases": ["建华"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区唐家岭西环路 17 号院",
+    "issueDescription": "民办"
+  },
+  "北京市海淀区稻香湖学校": {
+    "shortName": "稻香湖学校",
+    "aliases": ["稻香湖"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区凝翠路 1 号",
+    "issueDescription": "民办,未来城校区在昌平区七北路 7 号"
+  },
+  "北京海淀凯文学校": {
+    "shortName": "凯文学校",
+    "aliases": ["凯文", "海淀凯文"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区杏石口路 65 号",
+    "issueDescription": "民办 273000 元/学年"
+  },
+  "北京市师达中学": {
+    "shortName": "师达中学",
+    "aliases": ["师达"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区闵庄路 70 号",
+    "issueDescription": "民办 150000/160000 元"
+  },
+  "北京外国语大学附属外国语学校": {
+    "shortName": "北外附外语",
+    "aliases": ["北外附外", "北外附属外校"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区西二旗大街 19 号"
+  },
+  "清华大学附属中学永丰学校": {
+    "shortName": "清华附永丰",
+    "aliases": ["清华附永丰校"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "清华大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区永泽北路 6 号"
+  },
+  "北京市海淀外国语藤飞学校": {
+    "shortName": "海淀外国语藤飞",
+    "aliases": ["藤飞学校", "海淀外国语飞天"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "河北省怀来县北辛堡镇",
+    "issueDescription": "民办 96000 元,异地校区位于河北怀来"
+  },
+  "北京市海淀未来学校": {
+    "shortName": "海淀未来学校",
+    "aliases": ["海淀未来"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区西小口路 66 号",
+    "issueDescription": "民办 220000 元/学年"
+  },
+  "北京中科启元学校": {
+    "shortName": "中科启元",
+    "aliases": ["启元学校"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区中关村南三街 10 号",
+    "issueDescription": "民办,详见校园网"
+  },
+  "北京市海淀外国语实验学校": {
+    "shortName": "海淀外语实验",
+    "aliases": ["北京市海淀外语实验学校", "海淀外语"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区杏石口路 20 号",
+    "issueDescription": "民办 96000 元,教委正名「北京市海淀外语实验学校」(无「国」字)"
+  },
+  "海淀区启慧未来学校": {
+    "shortName": "启慧未来",
+    "aliases": ["北京市海淀区启慧未来学校", "启慧"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区花园路 C2 号",
+    "issueDescription": "民办 100000 元"
+  },
+  "北京市海淀区人北实验学校": {
+    "shortName": "人北实验",
+    "aliases": ["北京市海淀区仁北高级中学", "仁北高级中学", "仁北", "人北"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区苏家坨镇苏三四村村南 1 号",
+    "issueDescription": "民办 96000 元,教委正名「仁北高级中学」(「仁」字),高德返回「人北实验学校」(「人」字),为同一所学校"
+  },
+
+  "北京市第一〇一中学": {
+    "shortName": "101中学",
+    "aliases": ["101", "一零一", "北京市第一零一中学"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true,
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区颐和园路 11 号",
+    "district": "haidian",
+    "lng": 116.304351,
+    "lat": 39.997827
+  },
+  "北京交通大学附属中学": {
+    "shortName": "北交大附中",
+    "aliases": ["北交大附"],
+    "admissionScope": "citywide",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区高粱桥路 12 号",
+    "district": "haidian",
+    "lng": 116.35006,
+    "lat": 39.943747
+  },
+  "北京市育英学校": {
+    "shortName": "育英学校",
+    "aliases": ["育英"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区万寿路西街 11 号",
+    "district": "haidian",
+    "lng": 116.286236,
+    "lat": 39.911471,
+    "issueDescription": "跟「北京市育英中学」(208002) 是两所不同学校,分别在万寿路西街 11 号和 14 号"
+  },
+  "中国人民大学附属中学翠微学校": {
+    "shortName": "人大附翠微",
+    "aliases": ["人大附翠微"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "中国人民大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区翠微路 1 号",
+    "district": "haidian",
+    "lng": 116.301147,
+    "lat": 39.913635
+  },
+  "北京市海淀区教师进修学校附属实验学校": {
+    "shortName": "教师进修附实验",
+    "aliases": ["教师进修附属"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区远大路 34 号",
+    "district": "haidian",
+    "lng": 116.277674,
+    "lat": 39.955561
+  },
+  "首都师范大学第二附属中学": {
+    "shortName": "首师大二附中",
+    "aliases": ["首师大二附"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区彰化路 8 号",
+    "district": "haidian",
+    "lng": 116.29064,
+    "lat": 39.94206
+  },
+  "北京市海淀实验中学": {
+    "shortName": "海淀实验中学",
+    "aliases": ["海淀实验"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区紫竹院路 96 号",
+    "district": "haidian",
+    "lng": 116.297824,
+    "lat": 39.944722
+  },
+  "北京交通大学附属中学第二分校": {
+    "shortName": "北交大附二分校",
+    "aliases": ["北交大附二"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京交通大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区高粱桥斜街 3 号",
+    "district": "haidian",
+    "lng": 116.346631,
+    "lat": 39.946161
+  },
+  "北京交通大学附属中学分校": {
+    "shortName": "北交大附分校",
+    "aliases": ["北交大附分校"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京交通大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区学院南路 1 号",
+    "district": "haidian",
+    "lng": 116.360541,
+    "lat": 39.958233
+  },
+  "北京市中关村中学知春分校": {
+    "shortName": "中关村中学知春",
+    "aliases": ["中关村知春"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京市中关村中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区知春东里 12 号楼",
+    "district": "haidian",
+    "lng": 116.32808,
+    "lat": 39.974116
+  },
+  "北京交通大学附属中学东校区": {
+    "shortName": "北交大附东",
+    "aliases": ["北交大附东"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京交通大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区马甸西路 2 号",
+    "district": "haidian",
+    "lng": 116.374721,
+    "lat": 39.969415
+  },
+  "北京大学附属中学北医分校": {
+    "shortName": "北大附北医",
+    "aliases": ["北医附中", "北大附中北医分校"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区花园北路 40 号",
+    "district": "haidian",
+    "lng": 116.363776,
+    "lat": 39.981619
+  },
+  "北京一零一中矿大分校": {
+    "shortName": "101矿大分校",
+    "aliases": ["101 矿大"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京市第一〇一中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区学院路丁 11 号",
+    "district": "haidian",
+    "lng": 116.35332,
+    "lat": 39.99207
+  },
+  "北京一零一中石油分校": {
+    "shortName": "101石油分校",
+    "aliases": ["101 石油"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京市第一〇一中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区学院路 20 号",
+    "district": "haidian",
+    "lng": 116.357785,
+    "lat": 39.995441
+  },
+  "中国人民大学附属中学第二分校": {
+    "shortName": "人大附二分",
+    "aliases": ["人大附二分校"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "中国人民大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区蓝靛厂路 25 号",
+    "district": "haidian",
+    "lng": 116.277615,
+    "lat": 39.96654
+  },
+  "北京航空航天大学实验学校": {
+    "shortName": "北航实验",
+    "aliases": ["北航附中"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区学院路 37 号",
+    "district": "haidian",
+    "lng": 116.350943,
+    "lat": 39.980626
+  },
+  "首都师范大学附属育新学校": {
+    "shortName": "首师大附育新",
+    "aliases": ["育新学校"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区西三旗新康园 4 号",
+    "district": "haidian",
+    "lng": 116.352057,
+    "lat": 40.062673
+  },
+  "中央民族大学附属中学": {
+    "shortName": "民大附中",
+    "aliases": ["中央民大附中"],
+    "admissionScope": "citywide",
+    "hasInternationalDept": true,
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区法华寺路甲 5 号",
+    "district": "haidian",
+    "lng": 116.314399,
+    "lat": 39.951388
+  },
+  "北京市第五十七中学上庄分校": {
+    "shortName": "57中上庄",
+    "aliases": ["57 中上庄"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京市第五十七中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区上庄镇上庄路 43 号",
+    "district": "haidian",
+    "lng": 116.211347,
+    "lat": 40.108062
+  },
+  "北京市第十九中学闵庄校区": {
+    "shortName": "19中闵庄",
+    "aliases": ["19 中闵庄"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京市第十九中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区闵庄路 56 号",
+    "district": "haidian",
+    "lng": 116.232321,
+    "lat": 39.972924
+  },
+  "首都师范大学附属中学第一分校": {
+    "shortName": "首师大附一分校",
+    "aliases": ["首师大附一分"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "首都师范大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区阜石路甲 59 号",
+    "district": "haidian",
+    "lng": 116.175305,
+    "lat": 39.923704
+  },
+  "北京市海淀区教师进修附属实验香山分校": {
+    "shortName": "教师进修香山",
+    "aliases": ["教师进修香山"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区香山南辛村 1 号",
+    "district": "haidian",
+    "lng": 116.210461,
+    "lat": 39.991036
+  },
+  "北京市中关村外国语学校": {
+    "shortName": "中关村外国语",
+    "aliases": ["中关村外语"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区西北旺冷泉东路 66 号",
+    "district": "haidian",
+    "lng": 116.231714,
+    "lat": 40.032475
+  },
+  "北京理工大学附属中学分校": {
+    "shortName": "北理工附中分校",
+    "aliases": ["北理工附分"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "北京理工大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区紫竹院南路 11 号",
+    "district": "haidian",
+    "lng": 116.319606,
+    "lat": 39.935198
+  },
+  "中国人民大学附属中学分校": {
+    "shortName": "人大附分校",
+    "aliases": ["人大附分校"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "中国人民大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区双榆树南里二区 3 号",
+    "district": "haidian",
+    "lng": 116.330501,
+    "lat": 39.965756
+  },
+  "清华大学附属实验学校": {
+    "shortName": "清华附实验",
+    "aliases": ["清华附实验"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "清华大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区清华大学院内",
+    "district": "haidian",
+    "lng": 116.318059,
+    "lat": 40.004873
+  },
+  "人大附中西山学校": {
+    "shortName": "人大附西山",
+    "aliases": ["人大附西山"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "中国人民大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区马连洼南路 9 号",
+    "district": "haidian",
+    "lng": 116.285009,
+    "lat": 40.031915
+  },
+  "北京市海淀区青苗学校": {
+    "shortName": "青苗学校",
+    "aliases": ["青苗"],
+    "admissionScope": "district",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区四季青镇巨山路 21 号",
+    "district": "haidian",
+    "lng": 116.225303,
+    "lat": 39.947633
+  },
+  "首都师范大学附属玉泉学校": {
+    "shortName": "首师大附玉泉",
+    "aliases": ["首师大附玉泉"],
+    "admissionScope": "district",
+    "isBranch": true,
+    "parentSchool": "首都师范大学附属中学",
+    "verified": true,
+    "verifiedAt": "2026-05-26",
+    "source": "2025 海淀中招简章",
+    "addressOverride": "北京市海淀区闵庄南路 17 号",
+    "district": "haidian",
+    "lng": 116.247514,
+    "lat": 39.96496
   }
 }

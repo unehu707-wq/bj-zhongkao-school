@@ -48,6 +48,14 @@ export function renderSchoolList(schools, container) {
     container.appendChild(empty);
     return [];
   }
+  // 列表头:总数 + 已核对比例
+  const verifiedCount = schools.filter(s => s.verified === true).length;
+  const summary = document.createElement('div');
+  summary.className = 'school-list-summary';
+  summary.innerHTML = verifiedCount > 0
+    ? `共 <strong>${schools.length}</strong> 所学校,其中 <strong>${verifiedCount}</strong> 所已核对 ✓`
+    : `共 <strong>${schools.length}</strong> 所学校`;
+  container.appendChild(summary);
   const cards = schools.map(s => {
     const card = createCard(s);
     container.appendChild(card);
